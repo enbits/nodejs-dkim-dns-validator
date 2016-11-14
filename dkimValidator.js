@@ -7,6 +7,14 @@ var buildItemsArray = (item) => {
 };
 
 exports.validate = (response) => {
+
+  if (response === undefined) {
+    return {
+      result: false,
+      reason: 'unknown_response_from_server'
+    }
+  }
+
   //validation rules
   var validationRules = { v: 'DKIM1', g: '*', k: 'rsa', p: /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/};
 
@@ -39,11 +47,12 @@ exports.validate = (response) => {
       result: true,
       dkimData: itemsArray
     };
-  } else {
-    return {
-      result: false,
-      dkimData: itemsArray,
-      validationsErrors: validationsErrors
-    };
   }
+
+  return {
+    result: false,
+    reason: 'invalid_dkim',
+    dkimData: itemsArray,
+    validationsErrors: validationsErrors
+  };
 };
